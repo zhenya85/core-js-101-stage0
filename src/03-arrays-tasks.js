@@ -35,10 +35,9 @@ function findElement(arr, value) {
  *    5 => [ 1, 3, 5, 7, 9 ]
  */
 function generateOdds(len) {
-  const arr = [];
-  for (let i = 1, j = 1; i <= len; i += 1, j += 2) {
-    arr.push(j);
-  }
+  if (len === 1) return [1];
+  const arr = generateOdds(len - 1);
+  arr.push(len * 2 - 1);
   return arr;
 }
 
@@ -273,10 +272,7 @@ function getSecondItems(arr) {
  */
 function propagateItemsByPositionIndex(arr) {
   return arr.reduce((acc, item, index) => {
-    const resArr = [];
-    for (let i = 0; i <= index; i += 1) {
-      resArr.push(item);
-    }
+    const resArr = Array(index + 1).fill(item);
     return [...acc, ...resArr];
   }, []);
 }
@@ -474,19 +470,14 @@ function sortCitiesArray(arr) {
  *           [0,0,0,0,1]]
  */
 function getIdentityMatrix(n) {
-  const arr = [];
-  for (let i = 0; i < n; i += 1) {
-    const subArr = [];
-    for (let j = 0; j < n; j += 1) {
-      if (i === j) {
-        subArr.push(1);
-      } else {
-        subArr.push(0);
-      }
-    }
-    arr.push(subArr);
-  }
-  return arr;
+  const fArr = Array(n).fill([]);
+  const sArr = fArr.reduce((acc, item, ind) => {
+    const arr = Array(n).fill(0);
+    arr[ind] = 1;
+    acc.push(arr);
+    return acc;
+  }, []);
+  return sArr;
 }
 
 /**
@@ -503,11 +494,8 @@ function getIdentityMatrix(n) {
  *     3, 3   => [ 3 ]
  */
 function getIntervalArray(start, end) {
-  const arr = [];
-  for (let i = start; i <= end; i += 1) {
-    arr.push(i);
-  }
-  return arr;
+  if (start === end) return [start];
+  return [start, ...getIntervalArray(start + 1, end)];
 }
 
 /**
@@ -575,7 +563,7 @@ function group(array, keySelector, valueSelector) {
  * and flattens the resulting sequences into one array.
  *
  * @param {array} arr
- * @param {Function} childrenSelector, a transform function to apply to each element
+ * @param childrenSelector
  *                                     that returns an array of children
  * @return {array}
  *
@@ -599,8 +587,10 @@ function selectMany(arr, childrenSelector) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  return indexes.reduce((acc, index) => {
+    return acc[index];
+  }, arr);
 }
 
 /**
@@ -621,8 +611,13 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const nextArrIndexStart = Math.round(arr.length / 2);
+  const prevArrIndexEnd = Math.floor(arr.length / 2);
+  const secondArr = arr.splice(nextArrIndexStart, prevArrIndexEnd);
+  const firstArr = arr.splice(0, prevArrIndexEnd);
+
+  return [...secondArr, ...arr, ...firstArr];
 }
 
 module.exports = {
