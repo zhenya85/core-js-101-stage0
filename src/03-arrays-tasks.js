@@ -471,13 +471,12 @@ function sortCitiesArray(arr) {
  */
 function getIdentityMatrix(n) {
   const fArr = Array(n).fill([]);
-  const sArr = fArr.reduce((acc, item, ind) => {
+  return fArr.reduce((acc, item, ind) => {
     const arr = Array(n).fill(0);
     arr[ind] = 1;
     acc.push(arr);
     return acc;
   }, []);
-  return sArr;
 }
 
 /**
